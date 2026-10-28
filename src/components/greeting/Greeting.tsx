@@ -7,6 +7,7 @@ import { SplitText } from "gsap/SplitText";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { OliveSprig } from "./OliveSprig";
 import { WaveRule } from "./WaveRule";
+import { HandwrittenTitle, createTitleWriting } from "./HandwrittenTitle";
 
 gsap.registerPlugin(useGSAP, SplitText, DrawSVGPlugin);
 
@@ -21,16 +22,6 @@ export function Greeting() {
       const media = gsap.matchMedia();
 
       media.add("(prefers-reduced-motion: no-preference)", () => {
-        const firstLine = SplitText.create("[data-heading-first]", {
-          type: "chars",
-          smartWrap: true,
-          tag: "span",
-        });
-        const secondLine = SplitText.create("[data-heading-second]", {
-          type: "chars",
-          smartWrap: true,
-          tag: "span",
-        });
         const message = SplitText.create("[data-typewriter]", {
           type: "chars",
           smartWrap: true,
@@ -53,39 +44,14 @@ export function Greeting() {
           { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
           0.2,
         );
-        intro.fromTo(
-          firstLine.chars,
-          { opacity: 0, yPercent: 30, filter: "blur(6px)" },
-          {
-            opacity: 1,
-            yPercent: 0,
-            filter: "blur(0px)",
-            duration: 1.1,
-            stagger: 0.04,
-            ease: "power3.out",
-          },
-          0.4,
-        );
-        intro.set(firstLine.chars, { clearProps: "filter" }, ">");
-        intro.fromTo(
-          secondLine.chars,
-          { opacity: 0, yPercent: 30, filter: "blur(6px)" },
-          {
-            opacity: 1,
-            yPercent: 0,
-            filter: "blur(0px)",
-            duration: 1.1,
-            stagger: 0.05,
-            ease: "power3.out",
-          },
-          0.8,
-        );
-        intro.set(secondLine.chars, { clearProps: "filter" }, ">");
+        intro.add(createTitleWriting(container.current!), 0.5);
+        intro.addLabel("title-written", ">");
+        intro.add(() => boil.play(), "title-written");
         intro.fromTo(
           "[data-sprig] [data-draw]",
           { drawSVG: "0%" },
           { drawSVG: "100%", duration: 1.6, stagger: 0.08, ease: "power2.inOut" },
-          1.2,
+          "title-written-=0.3",
         );
         intro.fromTo(
           "[data-olive-fill]",
@@ -93,17 +59,14 @@ export function Greeting() {
           { fillOpacity: 0.85, duration: 0.6, ease: "power2.out" },
           ">",
         );
-        intro.add(() => boil.play(), ">");
         intro.fromTo(
           message.chars,
           { opacity: 0 },
           { opacity: 1, duration: 0.01, stagger: 0.035, ease: "none" },
-          1.6,
+          "title-written",
         );
 
         return () => {
-          firstLine.revert();
-          secondLine.revert();
           message.revert();
         };
       });
@@ -125,8 +88,8 @@ export function Greeting() {
       <svg width="0" height="0" aria-hidden="true" className="absolute">
         <defs>
           <filter id="ink-edge" x="-5%" y="-10%" width="110%" height="120%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="grain" />
-            <feDisplacementMap in="SourceGraphic" in2="grain" scale="2.5" xChannelSelector="R" yChannelSelector="G" />
+            <feTurbulence data-boil-noise type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="1" result="grain" />
+            <feDisplacementMap in="SourceGraphic" in2="grain" scale="3.5" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
       </svg>
@@ -136,15 +99,11 @@ export function Greeting() {
           hola · ciao · bonjour
         </p>
         <h1
-          className="font-display text-[clamp(3.25rem,min(17vw,20svh),11.5rem)] leading-[0.9] font-[300] tracking-[-0.045em] mix-blend-multiply"
-          style={{ fontVariationSettings: '"SOFT" 100, "WONK" 1', filter: "url(#ink-edge)", fontKerning: "none" }}
+          className="text-[clamp(3.25rem,min(19.5vw,20svh),11.5rem)] leading-[0.9] mix-blend-multiply"
+          style={{ filter: "url(#ink-edge)" }}
         >
-          <span data-heading-first data-intro className="block whitespace-nowrap">
-            bienvenidos
-          </span>
-          <span data-heading-second data-intro className="block whitespace-nowrap text-aegean italic [word-spacing:0.12em]">
-            a la mesa
-          </span>
+          <span className="sr-only">bienvenidos a la mesa</span>
+          <HandwrittenTitle />
         </h1>
 
         <div data-sprig data-decorative className="mt-6 h-20 w-32 text-aegean md:h-[110px] md:w-44">

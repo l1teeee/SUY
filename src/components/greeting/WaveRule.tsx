@@ -32,7 +32,8 @@ export function WaveRule() {
       });
       redraw.set({}, {}, LINE_FRAMES.length * FRAME_DURATION);
 
-      const appear = gsap.timeline({ delay: 2, onComplete: () => redraw.play() });
+      // The rule starts after the handwritten title has finished.
+      const appear = gsap.timeline({ delay: 4, onComplete: () => redraw.play() });
       appear.fromTo(
         path,
         { drawSVG: "0%" },
