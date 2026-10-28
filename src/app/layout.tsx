@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Courier_Prime, Fraunces } from "next/font/google";
+import { SiteHeader } from "@/components/header/SiteHeader";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -27,7 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${fraunces.variable} ${courierPrime.variable}`}>
-      <body>{children}</body>
+      <body className="flex min-h-svh flex-col">
+        <SiteHeader />
+        {children}
+      </body>
     </html>
   );
 }

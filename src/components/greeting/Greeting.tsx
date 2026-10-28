@@ -83,7 +83,7 @@ export function Greeting() {
   return (
     <div
       ref={container}
-      className="relative grid min-h-svh grid-rows-[1fr_auto] overflow-hidden px-4 pt-5 pb-5 lg:px-10 lg:pt-7 lg:pb-7"
+      className="relative grid flex-1 grid-rows-[1fr_auto] overflow-hidden px-4 pb-5 lg:px-10 lg:pb-7"
     >
       <svg width="0" height="0" aria-hidden="true" className="absolute">
         <defs>
@@ -94,7 +94,7 @@ export function Greeting() {
         </defs>
       </svg>
 
-      <main className="flex min-w-0 flex-col items-center justify-center py-10 text-center md:py-12">
+      <main className="flex min-w-0 flex-col items-center justify-center py-10 text-center md:py-6">
         <p data-eyebrow data-intro className="mb-7 text-sm tracking-[0.2em] md:mb-8">
           hola · ciao · bonjour
         </p>
